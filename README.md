@@ -17,6 +17,23 @@ Build a pipeline that helps answer:
 - dashboard-ready CSV exports
 - unit tests passing
 
+## Current Results
+Latest validated live run:
+- `558` total jobs loaded across `Airtable` and `Stripe`
+- `135` target engineering/data jobs after role filtering
+- data quality checks passing
+- test suite passing
+
+Filtered target-role counts:
+- `Stripe`: `119`
+- `Airtable`: `16`
+
+Filtered top skill signals:
+- `Airtable`: `SQL`, `Kubernetes`, `Python`, `AWS`
+- `Stripe`: `Python`, `AWS`, `Scala`, `SQL`, `Kubernetes`, `Spark`
+
+This is enough to show cross-company comparison, skill extraction, mart modeling, and quality validation on live public job-board data.
+
 ## MVP Stack
 - Python for ingestion and parsing
 - PostgreSQL for raw and analytics storage
