@@ -89,11 +89,15 @@ CREATE TABLE IF NOT EXISTS marts.dim_jobs (
     company TEXT,
     location TEXT,
     seniority VARCHAR(100),
+    is_target_role BOOLEAN NOT NULL DEFAULT FALSE,
     posted_date DATE,
     collected_at TIMESTAMPTZ NOT NULL,
     CONSTRAINT fk_dim_jobs_stg_job
         FOREIGN KEY (job_id) REFERENCES staging.stg_job_postings(job_id)
 );
+
+ALTER TABLE marts.dim_jobs
+    ADD COLUMN IF NOT EXISTS is_target_role BOOLEAN NOT NULL DEFAULT FALSE;
 
 -- Fact table linking jobs and skills
 CREATE TABLE IF NOT EXISTS marts.fct_job_skills (
@@ -110,6 +114,22 @@ CREATE TABLE IF NOT EXISTS marts.fct_job_skills (
 );
 
 CREATE INDEX IF NOT EXISTS idx_fct_job_skills_skill_id ON marts.fct_job_skills(skill_id);
+
+-- Company-level summary marts
+CREATE TABLE IF NOT EXISTS marts.agg_company_skill_counts (
+    company TEXT NOT NULL,
+    skill_name VARCHAR(255) NOT NULL,
+    skill_category VARCHAR(100) NOT NULL,
+    mention_count INTEGER NOT NULL,
+    PRIMARY KEY (company, skill_name)
+);
+
+CREATE TABLE IF NOT EXISTS marts.agg_company_seniority_counts (
+    company TEXT NOT NULL,
+    seniority VARCHAR(100) NOT NULL,
+    job_count INTEGER NOT NULL,
+    PRIMARY KEY (company, seniority)
+);
 
 -- Example aggregate view for analytics
 CREATE OR REPLACE VIEW marts.agg_skill_counts_by_date AS

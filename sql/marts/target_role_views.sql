@@ -3,9 +3,7 @@
 CREATE OR REPLACE VIEW marts.target_dim_jobs AS
 SELECT *
 FROM marts.dim_jobs
-WHERE
-    title ~* '(data engineer|analytics engineer|data analyst|software engineer|security engineer|platform engineer|infrastructure engineer|engineering manager|web developer|design developer|developer|engineer|engineering|backend|frontend|full stack|devops|machine learning|ml engineer|data science|analytics)'
-    AND title !~* '(account executive|business development|customer success|renewals?|sales|solutions consultant|program manager|product manager|finance|procurement|contracts?|marketing|people systems|demand gen|technical account manager|account manager|operations)';
+WHERE is_target_role;
 
 CREATE OR REPLACE VIEW marts.target_fct_job_skills AS
 SELECT f.*

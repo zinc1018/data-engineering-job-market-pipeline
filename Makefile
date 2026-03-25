@@ -67,6 +67,8 @@ marts:
 	$(PSQL) -f sql/marts/dim_jobs.sql
 	$(PSQL) -f sql/marts/dim_skills.sql
 	$(PSQL) -f sql/marts/fct_job_skills.sql
+	$(PSQL) -f sql/marts/agg_company_skill_counts.sql
+	$(PSQL) -f sql/marts/agg_company_seniority_counts.sql
 
 quality:
 	PYTHONPATH=. $(PYTHON) src/transform/check_data_quality.py

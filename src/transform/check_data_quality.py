@@ -32,6 +32,29 @@ CHECKS = {
         SELECT COUNT(*) FROM marts.dim_jobs
         WHERE posted_date IS NULL
     """,
+    "target_dim_jobs_matches_flagged_dim_jobs": """
+        SELECT ABS(
+            (SELECT COUNT(*) FROM marts.target_dim_jobs) -
+            (SELECT COUNT(*) FROM marts.dim_jobs WHERE is_target_role)
+        )
+    """,
+    "agg_company_skill_counts_matches_target_fact_rows": """
+        SELECT ABS(
+            (SELECT COALESCE(SUM(mention_count), 0) FROM marts.agg_company_skill_counts) -
+            (
+                SELECT COUNT(*)
+                FROM marts.fct_job_skills f
+                JOIN marts.dim_jobs j ON f.job_id = j.job_id
+                WHERE j.is_target_role
+            )
+        )
+    """,
+    "agg_company_seniority_counts_matches_target_jobs": """
+        SELECT ABS(
+            (SELECT COALESCE(SUM(job_count), 0) FROM marts.agg_company_seniority_counts) -
+            (SELECT COUNT(*) FROM marts.dim_jobs WHERE is_target_role)
+        )
+    """,
 }
 
 

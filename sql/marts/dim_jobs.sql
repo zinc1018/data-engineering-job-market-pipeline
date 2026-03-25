@@ -9,6 +9,7 @@ INSERT INTO marts.dim_jobs (
     company,
     location,
     seniority,
+    is_target_role,
     posted_date,
     collected_at
 )
@@ -33,6 +34,12 @@ SELECT
         WHEN COALESCE(sjp.description, '') ~* '(^|[^a-z])(entry[ -]?level|new grad|new graduate|early career)([^a-z]|$)' THEN 'Junior'
         ELSE 'Unspecified'
     END AS seniority,
+    CASE
+        WHEN COALESCE(sjp.normalized_title, '') ~* '(data engineer|analytics engineer|data analyst|software engineer|security engineer|platform engineer|infrastructure engineer|engineering manager|web developer|design developer|developer|engineer|engineering|backend|frontend|full stack|devops|machine learning|ml engineer|data science|analytics)'
+         AND COALESCE(sjp.normalized_title, '') !~* '(account executive|business development|customer success|renewals?|sales|solutions consultant|program manager|product manager|finance|procurement|contracts?|marketing|people systems|demand gen|technical account manager|account manager|operations)'
+        THEN TRUE
+        ELSE FALSE
+    END AS is_target_role,
     sjp.posted_date,
     sjp.collected_at
 FROM staging.stg_job_postings sjp;
