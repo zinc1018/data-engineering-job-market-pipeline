@@ -5,6 +5,7 @@ VALUES
     ('Python', 'Programming'),
     ('SQL', 'Programming'),
     ('Scala', 'Programming'),
+    ('PostgreSQL', 'Warehousing'),
     ('Spark', 'Data Processing'),
     ('Hadoop', 'Data Processing'),
     ('Airflow', 'Orchestration'),

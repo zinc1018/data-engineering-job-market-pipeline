@@ -1,0 +1,92 @@
+[
+  {
+    "skill_name": "Python",
+    "skill_category": "Programming",
+    "patterns": ["python"]
+  },
+  {
+    "skill_name": "SQL",
+    "skill_category": "Programming",
+    "patterns": ["sql"]
+  },
+  {
+    "skill_name": "Scala",
+    "skill_category": "Programming",
+    "patterns": ["scala"]
+  },
+  {
+    "skill_name": "PostgreSQL",
+    "skill_category": "Warehousing",
+    "patterns": ["postgresql", "postgres"]
+  },
+  {
+    "skill_name": "Spark",
+    "skill_category": "Data Processing",
+    "patterns": ["spark", "pyspark"]
+  },
+  {
+    "skill_name": "Hadoop",
+    "skill_category": "Data Processing",
+    "patterns": ["hadoop"]
+  },
+  {
+    "skill_name": "Airflow",
+    "skill_category": "Orchestration",
+    "patterns": ["airflow", "apache airflow"]
+  },
+  {
+    "skill_name": "Prefect",
+    "skill_category": "Orchestration",
+    "patterns": ["prefect"]
+  },
+  {
+    "skill_name": "AWS",
+    "skill_category": "Cloud",
+    "patterns": ["aws", "amazon web services"]
+  },
+  {
+    "skill_name": "Azure",
+    "skill_category": "Cloud",
+    "patterns": ["azure", "microsoft azure"]
+  },
+  {
+    "skill_name": "GCP",
+    "skill_category": "Cloud",
+    "patterns": ["gcp", "google cloud", "google cloud platform"]
+  },
+  {
+    "skill_name": "Snowflake",
+    "skill_category": "Warehousing",
+    "patterns": ["snowflake"]
+  },
+  {
+    "skill_name": "Redshift",
+    "skill_category": "Warehousing",
+    "patterns": ["redshift", "amazon redshift"]
+  },
+  {
+    "skill_name": "BigQuery",
+    "skill_category": "Warehousing",
+    "patterns": ["bigquery", "big query"]
+  },
+  {
+    "skill_name": "Kafka",
+    "skill_category": "Streaming",
+    "patterns": ["kafka", "apache kafka"]
+  },
+  {
+    "skill_name": "Docker",
+    "skill_category": "DevOps",
+    "patterns": ["docker"]
+  },
+  {
+    "skill_name": "Kubernetes",
+    "skill_category": "DevOps",
+    "patterns": ["kubernetes", "k8s"]
+  },
+  {
+    "skill_name": "dbt",
+    "skill_category": "Transformation",
+    "patterns": ["dbt", "data build tool"]
+  }
+]

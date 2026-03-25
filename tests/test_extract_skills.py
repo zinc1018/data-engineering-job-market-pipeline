@@ -32,6 +32,19 @@ def test_extract_matches_handles_case_insensitivity():
     assert "Kafka" in normalized_skills
 
 
+def test_extract_matches_normalizes_common_synonyms():
+    description = "Experience with Amazon Web Services, PySpark, K8s, PostgreSQL, and Google Cloud Platform."
+
+    results = list(extract_matches(description))
+    normalized_skills = {normalized for _, normalized, _ in results}
+
+    assert "AWS" in normalized_skills
+    assert "Spark" in normalized_skills
+    assert "Kubernetes" in normalized_skills
+    assert "PostgreSQL" in normalized_skills
+    assert "GCP" in normalized_skills
+
+
 def test_extract_matches_avoids_partial_word_false_positives():
     description = "We value teamwork, ownership, and growth."
 

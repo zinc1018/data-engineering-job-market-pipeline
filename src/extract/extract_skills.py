@@ -12,31 +12,20 @@ from typing import Iterable
 
 import psycopg
 
+from src.utils.skill_taxonomy import load_skill_taxonomy
 
-SKILL_MAP = {
-    "python": ("Python", "Programming"),
-    "sql": ("SQL", "Programming"),
-    "scala": ("Scala", "Programming"),
-    "spark": ("Spark", "Data Processing"),
-    "hadoop": ("Hadoop", "Data Processing"),
-    "airflow": ("Airflow", "Orchestration"),
-    "prefect": ("Prefect", "Orchestration"),
-    "aws": ("AWS", "Cloud"),
-    "azure": ("Azure", "Cloud"),
-    "gcp": ("GCP", "Cloud"),
-    "snowflake": ("Snowflake", "Warehousing"),
-    "redshift": ("Redshift", "Warehousing"),
-    "bigquery": ("BigQuery", "Warehousing"),
-    "kafka": ("Kafka", "Streaming"),
-    "docker": ("Docker", "DevOps"),
-    "kubernetes": ("Kubernetes", "DevOps"),
-    "dbt": ("dbt", "Transformation"),
-}
 
-SKILL_PATTERNS = {
-    raw_keyword: re.compile(rf"(?<![a-z0-9]){re.escape(raw_keyword)}(?![a-z0-9])")
-    for raw_keyword in SKILL_MAP
-}
+SKILL_TAXONOMY = load_skill_taxonomy()
+SKILL_PATTERNS = [
+    (
+        pattern,
+        entry["skill_name"],
+        entry["skill_category"],
+        re.compile(rf"(?<![a-z0-9]){re.escape(pattern.lower())}(?![a-z0-9])"),
+    )
+    for entry in SKILL_TAXONOMY
+    for pattern in entry["patterns"]
+]
 
 
 def get_connection() -> psycopg.Connection:
@@ -55,8 +44,13 @@ def get_connection() -> psycopg.Connection:
 
 def extract_matches(description: str) -> Iterable[tuple[str, str, str]]:
     text = (description or "").lower()
-    for raw_keyword, (normalized_skill, skill_category) in SKILL_MAP.items():
-        if SKILL_PATTERNS[raw_keyword].search(text):
+    seen: set[tuple[str, str]] = set()
+    for raw_keyword, normalized_skill, skill_category, pattern in SKILL_PATTERNS:
+        if pattern.search(text):
+            key = (raw_keyword, normalized_skill)
+            if key in seen:
+                continue
+            seen.add(key)
             yield raw_keyword, normalized_skill, skill_category
 
 
