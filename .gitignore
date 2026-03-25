@@ -19,6 +19,7 @@ data/raw/*
 data/processed/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
+data/processed/*.jsonl
 dashboards/output/*.csv
 !dashboards/output/.gitkeep
 

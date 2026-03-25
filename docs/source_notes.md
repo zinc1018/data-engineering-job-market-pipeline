@@ -1,69 +1,48 @@
 # Source Notes
 
-This document tracks candidate job data sources for the Data Engineering Skills Pipeline project.
+This document tracks the current live ingestion source and its operational assumptions.
 
-## MVP Goal
-Start with 1-2 sources that are:
-- easy to access
-- stable enough for repeated collection
-- reasonably structured
-- acceptable from a usage and rate-limit perspective
+## Current Live Source
+### Greenhouse public board API
+Base pattern:
+- `https://boards-api.greenhouse.io/v1/boards/<board_token>/jobs?content=true`
 
-## Candidate Sources
+Validated board tokens:
+- `airtable`
+- `stripe`
 
-### 1. Public sample or exported datasets
-Pros:
-- easiest to start with
-- no scraping complexity
-- good for pipeline scaffolding
+## Why Greenhouse Works Well For MVP
+- public and easy to access
+- consistent JSON response shape across boards
+- useful volume for cross-company comparison
+- enough detail in job descriptions for skill extraction
 
-Cons:
-- less realistic than live ingestion
-- may not reflect current job demand
+## Current Field Mapping
+- `id` -> `source_job_id`
+- `title` -> `title`
+- `company_name` -> `company`
+- `location.name` -> `location`
+- `content` -> `description`
+- `absolute_url` -> `job_url`
+- `first_published` or `updated_at` -> `posted_date`
 
-Use case:
-- ideal for initial development and debugging
+## Known Payload Quirks
+- `metadata` may be `null`
+- `first_published` is more reliable than metadata for posting dates
+- boards include many non-target roles, so role filtering happens downstream, not during raw ingestion
 
-### 2. Company career pages
-Pros:
-- often structured HTML or JSON
-- useful for targeted ingestion
+## Operational Notes
+- ingestion now retries transient request failures up to 3 attempts with simple backoff
+- fetched records are validated before being written to JSON
+- successful runs append a JSONL log entry to `data/processed/ingestion_runs.jsonl`
+- raw loading uses upsert behavior on `(source, source_job_id)`
 
-Cons:
-- site structure varies by company
-- lower volume unless many companies are covered
+## Current Limitations
+- only Greenhouse boards are implemented as live sources
+- no source-specific rate limiting beyond basic request retry
+- no persisted ingestion metrics table in PostgreSQL yet
 
-Use case:
-- good for controlled ingestion experiments
-
-### 3. Job APIs or feeds
-Pros:
-- cleaner and more repeatable than ad hoc scraping
-- often easier to normalize
-
-Cons:
-- may require auth, quotas, or paid access
-- availability varies
-
-Use case:
-- best long-term source if available
-
-## Recommended Approach
-1. keep the current sample JSON workflow for local validation
-2. add one live-source ingestion script with a pluggable connector design
-3. document assumptions and rate-limit considerations for each source
-
-## Data Source Evaluation Criteria
-- accessibility
-- legal/terms-of-use comfort
-- schema consistency
-- volume and coverage
-- ease of debugging
-- repeatability
-
-## Next Decision
-Choose one live source and document:
-- access method
-- expected fields
-- refresh frequency
-- known limitations
+## Recommended Next Ingestion Improvements
+1. Add structured ingestion metrics to PostgreSQL instead of file-only logs.
+2. Add one more public source type beyond Greenhouse.
+3. Add source-level tests for malformed or partial API payloads.

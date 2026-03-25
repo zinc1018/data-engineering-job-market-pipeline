@@ -53,6 +53,11 @@ Run tests:
 .venv/bin/python -m pytest -q
 ```
 
+Run the isolated integration smoke path:
+```bash
+make smoke
+```
+
 Run quality checks:
 ```bash
 PYTHONPATH=. .venv/bin/python src/transform/check_data_quality.py
@@ -66,4 +71,5 @@ PYTHONPATH=. .venv/bin/python dashboards/export_dashboard_data.py
 ## Notes
 - `load_raw_job_postings.py` now upserts refreshed raw fields on conflict.
 - company comparison queries are most useful after `target_role_views.sql` has been created through the marts build.
+- `make smoke` uses a temporary PostgreSQL database and does not modify the main working dataset.
 - if you rely on environment variables instead of local socket auth, set them in `.env` before running the Python entrypoints.

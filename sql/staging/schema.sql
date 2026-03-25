@@ -25,6 +25,23 @@ CREATE UNIQUE INDEX IF NOT EXISTS uq_raw_job_postings_source_job_id
     ON raw.raw_job_postings(source, source_job_id)
     WHERE source_job_id IS NOT NULL;
 
+-- Ingestion run history for operational visibility
+CREATE TABLE IF NOT EXISTS raw.ingestion_runs (
+    ingestion_run_id BIGSERIAL PRIMARY KEY,
+    source_type VARCHAR(100) NOT NULL,
+    board_tokens JSONB NOT NULL,
+    record_count INTEGER NOT NULL,
+    output_path TEXT NOT NULL,
+    fetched_at TIMESTAMPTZ NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb
+);
+
+CREATE INDEX IF NOT EXISTS idx_ingestion_runs_fetched_at
+    ON raw.ingestion_runs(fetched_at);
+CREATE INDEX IF NOT EXISTS idx_ingestion_runs_source_type
+    ON raw.ingestion_runs(source_type);
+
 -- Staging table for cleaned job posting fields
 CREATE TABLE IF NOT EXISTS staging.stg_job_postings (
     job_id BIGINT PRIMARY KEY,

@@ -47,6 +47,27 @@ Business notes:
 
 ---
 
+## `raw.ingestion_runs`
+Purpose:
+- store operational fetch history for live ingestion runs
+
+| Column | Type | Description |
+|---|---|---|
+| `ingestion_run_id` | `BIGSERIAL` | Surrogate primary key for each ingestion run. |
+| `source_type` | `VARCHAR(100)` | Source family, such as `greenhouse`. |
+| `board_tokens` | `JSONB` | Source tokens included in the run. |
+| `record_count` | `INTEGER` | Number of records fetched in the run. |
+| `output_path` | `TEXT` | Local JSON file path written by the fetch step. |
+| `fetched_at` | `TIMESTAMPTZ` | Timestamp when the run completed. |
+| `status` | `VARCHAR(50)` | Run status, currently `success`. |
+| `metadata` | `JSONB` | Full run log payload for traceability. |
+
+Business notes:
+- This table supports operational debugging and lightweight ingestion observability.
+- File-based JSONL logs may still exist locally, but PostgreSQL is the authoritative run log.
+
+---
+
 ## `staging.stg_job_postings`
 Purpose:
 - standardize raw posting fields for downstream use

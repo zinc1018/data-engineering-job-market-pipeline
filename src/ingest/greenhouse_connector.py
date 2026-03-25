@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
+import time
 from typing import Any
 
 import requests
@@ -21,6 +22,8 @@ BASE_URL = "https://boards-api.greenhouse.io/v1/boards/{board_token}/jobs?conten
 @dataclass
 class GreenhouseConnector:
     board_token: str
+    timeout_seconds: int = 30
+    max_attempts: int = 3
 
     @property
     def source_name(self) -> str:
@@ -28,12 +31,30 @@ class GreenhouseConnector:
 
     def fetch_job_postings(self) -> list[JobPostingRecord]:
         url = BASE_URL.format(board_token=self.board_token)
-        response = requests.get(url, timeout=30)
-        response.raise_for_status()
-        payload = response.json()
+        payload = self._fetch_payload(url)
 
         jobs = payload.get("jobs", [])
         return [self._map_job(job) for job in jobs]
+
+    def _fetch_payload(self, url: str) -> dict[str, Any]:
+        last_error: Exception | None = None
+
+        for attempt in range(1, self.max_attempts + 1):
+            try:
+                response = requests.get(url, timeout=self.timeout_seconds)
+                response.raise_for_status()
+                payload = response.json()
+                if not isinstance(payload, dict):
+                    raise ValueError("Greenhouse payload is not a JSON object.")
+                return payload
+            except (requests.RequestException, ValueError) as exc:
+                last_error = exc
+                if attempt == self.max_attempts:
+                    break
+                time.sleep(attempt)
+
+        assert last_error is not None
+        raise last_error
 
     def _map_job(self, job: dict[str, Any]) -> JobPostingRecord:
         metadata = self._metadata_map(job.get("metadata", []))

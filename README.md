@@ -14,6 +14,7 @@ Build a pipeline that helps answer:
 - target-role filtering for engineering and data-relevant jobs
 - seniority classification and skill extraction logic
 - data quality checks against live mart tables
+- isolated end-to-end smoke validation against a temporary PostgreSQL database
 - dashboard-ready CSV exports
 - unit tests passing
 
@@ -110,6 +111,21 @@ PYTHONPATH=. .venv/bin/python dashboards/export_dashboard_data.py
 ```
 
 The repository works with Docker if available, but the current validated flow uses a local PostgreSQL server and the project `.venv`.
+
+## Validation
+Unit tests:
+
+```bash
+make test
+```
+
+Isolated end-to-end smoke run:
+
+```bash
+make smoke
+```
+
+`make smoke` creates a temporary PostgreSQL database, loads the sample fixture, runs the full raw-to-marts pipeline, checks data-quality invariants, prints row counts, and drops the temporary database without touching the main working dataset.
 
 ## Live Workflow
 ### Single board
