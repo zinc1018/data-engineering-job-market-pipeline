@@ -1,0 +1,17 @@
+skill_name,skill_category,mention_count
+SQL,Programming,126
+Python,Programming,65
+AWS,Cloud,31
+Kubernetes,DevOps,17
+Scala,Programming,16
+Spark,Data Processing,16
+Docker,DevOps,9
+Kafka,Streaming,8
+Airflow,Orchestration,7
+Azure,Cloud,6
+dbt,Transformation,4
+GCP,Cloud,4
+Hadoop,Data Processing,4
+Redshift,Warehousing,4
+Snowflake,Warehousing,4
+BigQuery,Warehousing,2

@@ -1,0 +1,26 @@
+company,skill_name,skill_category,mention_count
+Airtable,SQL,Programming,7
+Airtable,Python,Programming,5
+Airtable,Kubernetes,DevOps,4
+Airtable,AWS,Cloud,3
+Airtable,dbt,Transformation,3
+Airtable,Kafka,Streaming,2
+Airtable,Snowflake,Warehousing,2
+Airtable,Spark,Data Processing,2
+Airtable,Airflow,Orchestration,1
+Stripe,SQL,Programming,119
+Stripe,Python,Programming,60
+Stripe,AWS,Cloud,28
+Stripe,Scala,Programming,16
+Stripe,Spark,Data Processing,14
+Stripe,Kubernetes,DevOps,13
+Stripe,Docker,DevOps,9
+Stripe,Airflow,Orchestration,6
+Stripe,Azure,Cloud,6
+Stripe,Kafka,Streaming,6
+Stripe,GCP,Cloud,4
+Stripe,Hadoop,Data Processing,4
+Stripe,Redshift,Warehousing,4
+Stripe,BigQuery,Warehousing,2
+Stripe,Snowflake,Warehousing,2
+Stripe,dbt,Transformation,1
