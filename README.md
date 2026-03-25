@@ -11,9 +11,10 @@ Build a pipeline that helps answer:
 ## Current MVP Status
 - working local PostgreSQL pipeline from fetch to marts
 - Greenhouse ingestion for single-board and multi-board runs
-- target-role filtering for engineering and data-relevant jobs
+- persisted target-role classification for engineering and data-relevant jobs
 - seniority classification and skill extraction logic
-- data quality checks against live mart tables
+- company-level summary marts for skills and seniority
+- data quality checks against live mart tables and modeled summaries
 - isolated end-to-end smoke validation against a temporary PostgreSQL database
 - dashboard-ready CSV exports
 - unit tests passing
@@ -154,10 +155,18 @@ These cover:
 
 ## Target-Role Filtering
 The repository now keeps all raw jobs but filters comparisons and dashboard-facing analysis to engineering- and data-relevant roles through:
+- `marts.dim_jobs.is_target_role`
 - `marts.target_dim_jobs`
 - `marts.target_fct_job_skills`
 
 This avoids sales and non-technical roles dominating company comparisons on mixed Greenhouse boards.
+
+## Summary Marts
+The mart layer now includes persisted company-level summaries for target roles:
+- `marts.agg_company_skill_counts`
+- `marts.agg_company_seniority_counts`
+
+These make company comparisons easier to query and easier to explain in interviews than repeating the same aggregation logic ad hoc.
 
 ## Dashboard Outputs
 Dashboard-ready CSV exports are written to:

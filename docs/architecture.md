@@ -37,7 +37,9 @@ The Data Engineering Skills Pipeline collects job postings from public Greenhous
 5. **Mart Layer (SQL)**
    - create analytics-ready dimensions and fact tables
    - classify seniority from job titles
+   - persist target-role classification on `dim_jobs`
    - create target-role views for engineering/data jobs only
+   - materialize company-level summary marts
    - support dashboard queries such as top skills, tool demand, and seniority trends
 
 6. **Analytics / Dashboard Layer**
@@ -96,6 +98,8 @@ Examples:
 - `dim_jobs`
 - `dim_skills`
 - `fct_job_skills`
+- `agg_company_skill_counts`
+- `agg_company_seniority_counts`
 - `agg_skill_counts_by_date`
 - `target_dim_jobs`
 - `target_fct_job_skills`
@@ -114,6 +118,7 @@ For MVP, the project should support:
 - PostgreSQL raw table load with dedupe/upsert behavior
 - skill extraction for major DE tools
 - core mart tables plus target-role views
+- reusable company summary marts
 - data quality checks and dashboard exports
 
 ## Future Enhancements

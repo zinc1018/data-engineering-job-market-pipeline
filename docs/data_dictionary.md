@@ -91,17 +91,17 @@ Business notes:
 
 ---
 
-## `staging.stg_extracted_job_skills`
+## `staging.stg_job_skills`
 Purpose:
 - store extracted and normalized skill signals before dimensional modeling
 
 | Column | Type | Description |
 |---|---|---|
 | `job_id` | `BIGINT` | Job identifier tied to the posting. |
-| `raw_skill_text` | `TEXT` | Raw skill text detected in the description. |
+| `matched_text` | `TEXT` | Raw or normalized text matched in the description. |
 | `normalized_skill_name` | `VARCHAR(255)` | Standardized skill name, such as `Python` or `Airflow`. |
 | `skill_category` | `VARCHAR(100)` | Skill grouping such as Programming, Cloud, or Orchestration. |
-| `extraction_method` | `VARCHAR(100)` | Method used to identify the skill, such as keyword match or regex rule. |
+| `match_method` | `VARCHAR(100)` | Method used to identify the skill, such as keyword match or regex rule. |
 | `extracted_at` | `TIMESTAMP` | Timestamp when extraction occurred. |
 
 Business notes:
@@ -138,6 +138,7 @@ Purpose:
 | `company` | `TEXT` | Cleaned company name. |
 | `location` | `TEXT` | Cleaned location. |
 | `seniority` | `VARCHAR(100)` | Derived seniority classification such as Junior, Mid, Senior, or Lead. |
+| `is_target_role` | `BOOLEAN` | Whether the modeled job is classified as engineering/data relevant for downstream comparisons. |
 | `posted_date` | `DATE` | Posting date. |
 | `collected_at` | `TIMESTAMP` | Collection timestamp. |
 
@@ -155,12 +156,46 @@ Purpose:
 |---|---|---|
 | `job_id` | `BIGINT` | Foreign key to `marts.dim_jobs`. |
 | `skill_id` | `BIGINT` | Foreign key to `marts.dim_skills`. |
-| `extraction_method` | `VARCHAR(100)` | Method used to identify the skill. |
+| `matched_text` | `TEXT` | Text fragment that triggered the skill match. |
+| `match_method` | `VARCHAR(100)` | Method used to identify the skill. |
 | `created_at` | `TIMESTAMP` | Timestamp when the fact row was created. |
 
 Business notes:
 - This is the core fact table for skill-demand analysis.
 - One row represents a job requiring or mentioning a standardized skill.
+
+---
+
+## `marts.agg_company_skill_counts`
+Purpose:
+- summarize target-role skill demand by company
+
+| Column | Type | Description |
+|---|---|---|
+| `company` | `TEXT` | Company name from `marts.dim_jobs`. |
+| `skill_name` | `VARCHAR(255)` | Standardized skill name. |
+| `skill_category` | `VARCHAR(100)` | Skill category used for reporting. |
+| `mention_count` | `INTEGER` | Number of target-role fact rows for the company and skill. |
+
+Business notes:
+- This summary table avoids repeated aggregation logic for company comparison queries.
+- Counts only include rows where `is_target_role = true`.
+
+---
+
+## `marts.agg_company_seniority_counts`
+Purpose:
+- summarize target-role job counts by company and seniority
+
+| Column | Type | Description |
+|---|---|---|
+| `company` | `TEXT` | Company name from `marts.dim_jobs`. |
+| `seniority` | `VARCHAR(100)` | Derived seniority classification. |
+| `job_count` | `INTEGER` | Number of target-role jobs in the bucket. |
+
+Business notes:
+- This summary table supports company-level role distribution analysis.
+- Counts only include rows where `is_target_role = true`.
 
 ---
 
@@ -188,3 +223,5 @@ Business notes:
 - **Orchestration demand** -> filtered `skill_category = 'Orchestration'`
 - **Role title distribution** -> `marts.dim_jobs`
 - **Skill trend over time** -> `marts.agg_skill_counts_by_date`
+- **Company skill comparison** -> `marts.agg_company_skill_counts`
+- **Company seniority comparison** -> `marts.agg_company_seniority_counts`
