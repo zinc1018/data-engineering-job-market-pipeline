@@ -1,6 +1,6 @@
-# Data Engineering Skills Pipeline
+# Data Engineering Job Market Analytics Pipeline
 
-An end-to-end data engineering portfolio project that collects job postings from public Greenhouse boards, extracts required skills, transforms raw text into analytics-ready PostgreSQL tables, and surfaces market signals through SQL queries and dashboard exports.
+An end-to-end Python, PostgreSQL, and SQL data engineering project that ingests public job postings, models engineering skill demand and seniority trends, validates data quality, and produces analytics-ready datasets and dashboard outputs.
 
 ## Project Goal
 Build a pipeline that helps answer:
